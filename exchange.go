@@ -8,12 +8,12 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/sangx2/upbit-go/model"
-	"github.com/sangx2/upbit-go/model/exchange"
-	"github.com/sangx2/upbit-go/model/exchange/account"
-	"github.com/sangx2/upbit-go/model/exchange/deposit"
-	"github.com/sangx2/upbit-go/model/exchange/order"
-	"github.com/sangx2/upbit-go/model/exchange/withdraw"
+	"github.com/sangx2/upbit/model"
+	"github.com/sangx2/upbit/model/exchange"
+	"github.com/sangx2/upbit/model/exchange/account"
+	"github.com/sangx2/upbit/model/exchange/deposit"
+	"github.com/sangx2/upbit/model/exchange/order"
+	"github.com/sangx2/upbit/model/exchange/withdraw"
 )
 
 // GetAccounts 전체 계좌 조회

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/url"
 
-	"github.com/sangx2/upbit-go/model"
-	"github.com/sangx2/upbit-go/model/quotation"
+	"github.com/sangx2/upbit/model"
+	"github.com/sangx2/upbit/model/quotation"
 )
 
 // GetMarkets 마켓 코드 조회
