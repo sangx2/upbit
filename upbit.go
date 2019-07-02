@@ -144,7 +144,7 @@ func (u *Upbit) getResponse(requestMethod, requestURL string, values url.Values,
 		if u.ResponseError == nil {
 			return nil, errors.New("model.ResponseErrorFromJSON is nil")
 		}
-		return nil, fmt.Errorf("[StatusCode:%d:%s] %s", response.StatusCode, response.Status, u.ResponseError.Detail.Message)
+		return nil, fmt.Errorf("[%d:%s]%s:%s", response.StatusCode, response.Status, u.ResponseError.Detail.Name, u.ResponseError.Detail.Message)
 	}
 
 	return response, nil
