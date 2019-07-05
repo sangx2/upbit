@@ -14,6 +14,10 @@ type Account struct {
 	Modified       bool   `json:"modified"`
 }
 
+func (a *Account) GetMarketID() string {
+	return "KRW" + "-" + a.Currency
+}
+
 func AccountsFromJSON(r io.Reader) []*Account {
 	var accList []*Account
 
