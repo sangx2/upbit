@@ -16,7 +16,7 @@ type Chance struct {
 		ID         string   `json:"id"`
 		Name       string   `json:"name"`
 		OrderTypes []string `json:"order_types"`
-		OrderSide  []string `json:"order_sides"`
+		OrderSides []string `json:"order_sides"`
 
 		Bid struct {
 			Currency  string `json:"currency"`
