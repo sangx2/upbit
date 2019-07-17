@@ -84,7 +84,7 @@ func (u *Upbit) GetOrder(uuid, identifier string) (*order.Order, *model.Remainin
 	if len(uuid) == 0 && len(identifier) == 0 {
 		return nil, nil, errors.New("uuid and identifier length is 0")
 	} else if len(uuid) != 0 && len(identifier) != 0 {
-		return nil, nil, errors.New("uuid and identifier length is not nil. you must set only one param")
+		return nil, nil, errors.New("uuid and identifier length is not 0. you must set only one param")
 	}
 
 	values := url.Values{}
@@ -138,7 +138,7 @@ func (u *Upbit) GetOrders(market, state string, uuids, identifiers []string, pag
 	case exchange.ORDERBY_ASC:
 	case exchange.ORDERBY_DESC:
 	default:
-		orderBy = exchange.ORDERBY_ASC
+		orderBy = exchange.ORDERBY_DESC
 	}
 
 	values := url.Values{
@@ -202,7 +202,7 @@ func (u *Upbit) PurchaseOrder(market, volume, price, orderType, identifier strin
 	case exchange.ORDER_TYPE_LIMIT:
 	case exchange.ORDER_TYPE_PRICE:
 	default:
-		return nil, nil, errors.New("invalid orderType. check upbit.model.exchange package")
+		return nil, nil, errors.New("invalid orderType")
 	}
 
 	values := url.Values{
@@ -266,7 +266,7 @@ func (u *Upbit) SellOrder(market, volume, price, orderType, identifier string) (
 	case exchange.ORDER_TYPE_LIMIT:
 	case exchange.ORDER_TYPE_MARKET:
 	default:
-		return nil, nil, errors.New("invalid orderType. check upbit.model.exchange package")
+		return nil, nil, errors.New("invalid orderType")
 	}
 
 	values := url.Values{
@@ -332,20 +332,18 @@ func (u *Upbit) CancelOrder(uuid string) (*order.Order, *model.Remaining, error)
 // [HEADERS]
 //
 // Authorization : REQUIRED. Authorization token(JWT)
-func (u *Upbit) GetWithdraws(currency, state, limit string) ([]*withdraw.Withdraw, *model.Remaining, error) {
+func (u *Upbit) GetWithdraws(currency, state string, uuids, txids []string, limit, page, orderBy string) ([]*withdraw.Withdraw, *model.Remaining, error) {
 	switch state {
-	case exchange.WITHDRAW_STATE_ACCEPTED:
-	case exchange.WITHDRAW_STATE_ALMOST_ACCEPTED:
-	case exchange.WITHDRAW_STATE_CANCELED:
-	case exchange.WITHDRAW_STATE_DONE:
-	case exchange.WITHDRAW_STATE_PROCESSING:
-	case exchange.WITHDRAW_STATE_REJECTED:
-	case exchange.WITHDRAW_STATE_SUBMITTED:
 	case exchange.WITHDRAW_STATE_SUBMITTING:
-	case exchange.WITHDRAW_TRANSACTION_DEFAULT:
-	case exchange.WITHDRAW_TRANSACTION_INTERNAL:
+	case exchange.WITHDRAW_STATE_SUBMITTED:
+	case exchange.WITHDRAW_STATE_ALMOST_ACCEPTED:
+	case exchange.WITHDRAW_STATE_REJECTED:
+	case exchange.WITHDRAW_STATE_ACCEPTED:
+	case exchange.WITHDRAW_STATE_PROCESSING:
+	case exchange.WITHDRAW_STATE_DONE:
+	case exchange.WITHDRAW_STATE_CANCELED:
 	default:
-		return nil, nil, errors.New("invalid state. check upbit.model.exchange package")
+		return nil, nil, errors.New("invalid state")
 	}
 
 	l, e := strconv.Atoi(limit)
@@ -356,10 +354,21 @@ func (u *Upbit) GetWithdraws(currency, state, limit string) ([]*withdraw.Withdra
 		return nil, nil, errors.New("invalid limit. 0 < limit <= 100")
 	}
 
+	switch orderBy {
+	case exchange.ORDERBY_ASC:
+	case exchange.ORDERBY_DESC:
+	default:
+		orderBy = exchange.ORDERBY_DESC
+	}
+
 	values := url.Values{
 		"currency": []string{currency},
 		"state":    []string{state},
+		"uuids":    uuids,
+		"txids":    txids,
 		"limit":    []string{limit},
+		"page":     []string{page},
+		"order_by": []string{orderBy},
 	}
 
 	resp, e := u.getResponse(METHOD_GET, URL_UPBIT_V1+"/withdraws", values, API_TYPE_EXCHANGE, API_GROUP_DEFAULT)
@@ -471,7 +480,7 @@ func (u *Upbit) WithdrawCoin(currency, amount, address, secondaryAddress, transa
 	case exchange.WITHDRAW_TRANSACTION_DEFAULT:
 	case exchange.WITHDRAW_TRANSACTION_INTERNAL:
 	default:
-		return nil, nil, errors.New("invalid transactionType. check upbit.model.exchange package")
+		return nil, nil, errors.New("invalid transactionType")
 	}
 
 	values := url.Values{
@@ -541,7 +550,18 @@ func (u *Upbit) WithdrawKrw(amount string) (*withdraw.Withdraw, *model.Remaining
 // [HEADERS]
 //
 // Authorization : REQUIRED. Authorization token(JWT)
-func (u *Upbit) GetDeposits(currency, limit, page, orderBy string) ([]*deposit.Deposit, *model.Remaining, error) {
+func (u *Upbit) GetDeposits(currency, state string, uuids, txids []string, limit, page, orderBy string) ([]*deposit.Deposit, *model.Remaining, error) {
+	switch state {
+	case exchange.DEPOSIT_STATE_SUBMITTING:
+	case exchange.DEPOSIT_STATE_SUBMITTED:
+	case exchange.DEPOSIT_STATE_ALMOST_ACCEPTED:
+	case exchange.DEPOSIT_STATE_REJECTED:
+	case exchange.DEPOSIT_STATE_ACCEPTED:
+	case exchange.DEPOSIT_STATE_PROCESSING:
+	default:
+		return nil, nil, errors.New("invalid state")
+	}
+
 	l, e := strconv.Atoi(limit)
 	if e != nil {
 		return nil, nil, e
@@ -554,7 +574,7 @@ func (u *Upbit) GetDeposits(currency, limit, page, orderBy string) ([]*deposit.D
 	case exchange.ORDERBY_ASC:
 	case exchange.ORDERBY_DESC:
 	default:
-		orderBy = exchange.ORDERBY_ASC
+		orderBy = exchange.ORDERBY_DESC
 	}
 
 	values := url.Values{

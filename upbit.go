@@ -42,14 +42,14 @@ type Upbit struct {
 
 	queryHash hash.Hash
 
-	defaultClient *http.Client
-	orderClient   *http.Client
+	defaultClient *http.Client // Group:default Min:1800 Sec:30
+	orderClient   *http.Client //
 
-	marketClient     *http.Client
-	candlesClient    *http.Client
-	crixTradesClient *http.Client
-	tickerClient     *http.Client
-	orderbookClient  *http.Client
+	marketClient     *http.Client // Group:market Min:600 Sec:10
+	candlesClient    *http.Client // Group:candles Min:600 Sec:10
+	crixTradesClient *http.Client // Group:crix-trades Min:600 Sec:10
+	tickerClient     *http.Client // Group:ticker Min:600 Sec:10
+	orderbookClient  *http.Client // Group:orderbook Min:600 Sec:10
 
 	ResponseError *model.ResponseError // for debug
 }
