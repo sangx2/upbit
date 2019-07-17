@@ -7,11 +7,12 @@ import (
 
 // Account : 계좌 정보
 type Account struct {
-	Currency       string `json:"currency"`
-	Balance        string `json:"balance"`
-	Locked         string `json:"locked"`
-	AvgKrwBuyPrice string `json:"avg_krw_buy_price"`
-	Modified       bool   `json:"modified"`
+	Currency            string `json:"currency,omitempty"`
+	Balance             string `json:"balance,omitempty"`
+	Locked              string `json:"locked,omitempty"`
+	AvgBuyPrice         string `json:"avg_buy_price,omitempty"`
+	AvgBuyPriceModified bool   `json:"avg_buy_price_modified,omitempty"`
+	UnitCurrency        string `json:"unit_currency,omitempty"`
 }
 
 func (a *Account) GetMarketID() string {
