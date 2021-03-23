@@ -12,7 +12,7 @@ type Orderbook struct {
 	TotalAskSize   float64 `json:"total_ask_size"`
 	TotalBidSize   float64 `json:"total_bid_size"`
 	OrderbookUnits []struct {
-		AskPrice float32 `json:"ask_price"`
+		AskPrice float64 `json:"ask_price"`
 		BidPrice float64 `json:"bid_price"`
 		AskSize  float64 `json:"ask_size"`
 		BidSize  float64 `json:"bid_size"`
