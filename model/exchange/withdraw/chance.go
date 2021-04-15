@@ -39,10 +39,10 @@ type Chance struct {
 	} `json:"withdraw_limit"`
 }
 
-func ChanceFromJSON(r io.Reader) *Chance {
+func ChanceFromJSON(r io.Reader) (*Chance, error) {
 	var c *Chance
 
-	json.NewDecoder(r).Decode(&c)
+	e := json.NewDecoder(r).Decode(&c)
 
-	return c
+	return c, e
 }

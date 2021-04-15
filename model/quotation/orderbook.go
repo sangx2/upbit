@@ -19,10 +19,10 @@ type Orderbook struct {
 	} `json:"orderbook_units"`
 }
 
-func OrderbooksFromJSON(r io.Reader) []*Orderbook {
+func OrderbooksFromJSON(r io.Reader) ([]*Orderbook, error) {
 	var orderbooks []*Orderbook
 
-	json.NewDecoder(r).Decode(&orderbooks)
+	e := json.NewDecoder(r).Decode(&orderbooks)
 
-	return orderbooks
+	return orderbooks, e
 }

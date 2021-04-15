@@ -19,10 +19,10 @@ func (a *Account) GetMarketID() string {
 	return "KRW" + "-" + a.Currency
 }
 
-func AccountsFromJSON(r io.Reader) []*Account {
+func AccountsFromJSON(r io.Reader) ([]*Account, error) {
 	var accList []*Account
 
-	json.NewDecoder(r).Decode(&accList)
+	e := json.NewDecoder(r).Decode(&accList)
 
-	return accList
+	return accList, e
 }

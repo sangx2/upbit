@@ -12,18 +12,18 @@ type CoinAddress struct {
 	SecondaryAddress string `json:"secondary_address"`
 }
 
-func CoinAddressFromJSON(r io.Reader) *CoinAddress {
-	var c *CoinAddress
+func CoinAddressFromJSON(r io.Reader) (*CoinAddress, error) {
+	var coinAddress *CoinAddress
 
-	json.NewDecoder(r).Decode(&c)
+	e := json.NewDecoder(r).Decode(&coinAddress)
 
-	return c
+	return coinAddress, e
 }
 
-func CoinAddressesFromJSON(r io.Reader) []*CoinAddress {
+func CoinAddressesFromJSON(r io.Reader) ([]*CoinAddress, error) {
 	var coinAddresses []*CoinAddress
 
-	json.NewDecoder(r).Decode(&coinAddresses)
+	e := json.NewDecoder(r).Decode(&coinAddresses)
 
-	return coinAddresses
+	return coinAddresses, e
 }

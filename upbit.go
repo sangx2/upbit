@@ -5,34 +5,18 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/sangx2/upbit/model"
 	"hash"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/sangx2/upbit/model"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
 
 const (
-	URL_UPBIT_V1 = "https://api.upbit.com/v1"
-
-	METHOD_GET    = "GET"
-	METHOD_POST   = "POST"
-	METHOD_DELETE = "DELETE"
-
-	API_TYPE_EXCHANGE  = "exchange"
-	API_TYPE_QUOTATION = "quotation"
-
-	API_GROUP_DEFAULT     = "default"
-	API_GROUP_ORDER       = "order"
-	API_GROUP_MARKET      = "market"
-	API_GROUP_CANDLES     = "candles"
-	API_GROUP_CRIX_TRADES = "crix-trades"
-	API_GROUP_TICKER      = "ticker"
-	API_GROUP_ORDERBOOK   = "orderbook"
+	BaseURI = "https://api.upbit.com/v1"
 )
 
 // Upbit :
@@ -42,8 +26,9 @@ type Upbit struct {
 
 	queryHash hash.Hash
 
-	defaultClient *http.Client // Group:default Min:1800 Sec:30
-	orderClient   *http.Client //
+	defaultClient      *http.Client // Group:default Min:900 Sec:30
+	orderClient        *http.Client // Group:order Min:200 Sec:8
+	statusWalletClient *http.Client // Group:status-wallet Min:30 Sec:1
 
 	marketClient     *http.Client // Group:market Min:600 Sec:10
 	candlesClient    *http.Client // Group:candles Min:600 Sec:10
@@ -56,30 +41,34 @@ type Upbit struct {
 
 // NewUpbit :
 func NewUpbit(accessKey, secretKey string) *Upbit {
-	return &Upbit{accessKey: accessKey, secretKey: secretKey,
-		queryHash:     sha512.New(),
-		defaultClient: &http.Client{}, orderClient: &http.Client{},
-		marketClient: &http.Client{}, candlesClient: &http.Client{}, crixTradesClient: &http.Client{}, tickerClient: &http.Client{}, orderbookClient: &http.Client{},
+	return &Upbit{
+		accessKey: accessKey, secretKey: secretKey,
+		queryHash: sha512.New(),
+
+		defaultClient:      &http.Client{},
+		orderClient:        &http.Client{},
+		statusWalletClient: &http.Client{},
+
+		marketClient:     &http.Client{},
+		candlesClient:    &http.Client{},
+		crixTradesClient: &http.Client{},
+		tickerClient:     &http.Client{},
+		orderbookClient:  &http.Client{},
 	}
 }
 
-func (u *Upbit) getResponse(requestMethod, requestURL string, values url.Values, apiType, apiGroup string) (*http.Response, error) {
+func (u *Upbit) createRequest(method, url string, values url.Values, section string) (*http.Request, error) {
 	var request *http.Request
 
-	claim := jwt.MapClaims{
-		"access_key": u.accessKey,
-		"nonce":      uuid.New().String(),
-	}
-
-	switch requestMethod {
-	case METHOD_GET, METHOD_DELETE:
-		req, e := http.NewRequest(requestMethod, requestURL+"?"+values.Encode(), nil)
+	switch method {
+	case http.MethodGet, http.MethodDelete:
+		req, e := http.NewRequest(method, url+"?"+values.Encode(), nil)
 		if e != nil {
 			return nil, e
 		}
 		request = req
-	case METHOD_POST:
-		req, e := http.NewRequest(requestMethod, requestURL, strings.NewReader(values.Encode()))
+	case http.MethodPost:
+		req, e := http.NewRequest(method, url, strings.NewReader(values.Encode()))
 		if e != nil {
 			return nil, e
 		}
@@ -90,8 +79,13 @@ func (u *Upbit) getResponse(requestMethod, requestURL string, values url.Values,
 		return nil, errors.New("invalid request method")
 	}
 
-	switch apiType {
-	case API_TYPE_EXCHANGE:
+	claim := jwt.MapClaims{
+		"access_key": u.accessKey,
+		"nonce":      uuid.New().String(),
+	}
+
+	switch section {
+	case ApiSectionExchange:
 		if len(values) != 0 {
 			claim["query"] = values.Encode()
 			u.queryHash.Reset()
@@ -107,28 +101,37 @@ func (u *Upbit) getResponse(requestMethod, requestURL string, values url.Values,
 		}
 
 		request.Header.Add("Authorization", "Bearer "+signedToken)
-	case API_TYPE_QUOTATION:
+	case ApiSectionQuotation:
 	default:
-		return nil, errors.New("invalid api type")
+		return nil, errors.New("invalid api section")
 	}
 
+	return request, nil
+}
+
+func (u *Upbit) do(request *http.Request, apiGroup string) (*http.Response, error) {
 	var client *http.Client
 	switch apiGroup {
-	case API_GROUP_DEFAULT:
+	// Exchange
+	case ApiGroupDefault:
 		client = u.defaultClient
-	case API_GROUP_ORDER:
+	case ApiGroupOrder:
 		client = u.orderClient
-
-	case API_GROUP_MARKET:
+	case ApiGroupStatusWallet:
+		client = u.statusWalletClient
+	// Quotation
+	case ApiGroupMarket:
 		client = u.marketClient
-	case API_GROUP_CANDLES:
+	case ApiGroupCandles:
 		client = u.candlesClient
-	case API_GROUP_CRIX_TRADES:
+	case ApiGroupCrixTrades:
 		client = u.crixTradesClient
-	case API_GROUP_TICKER:
+	case ApiGroupTicker:
 		client = u.tickerClient
-	case API_GROUP_ORDERBOOK:
+	case ApiGroupOrderbook:
 		client = u.orderbookClient
+	default:
+		return nil, fmt.Errorf("invalid api group")
 	}
 
 	response, e := client.Do(request)

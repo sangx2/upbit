@@ -19,18 +19,18 @@ type Withdraw struct {
 	KrwAmount string `json:"krw_amount"`
 }
 
-func WithdrawFromJSON(r io.Reader) *Withdraw {
-	var w *Withdraw
+func WithdrawFromJSON(r io.Reader) (*Withdraw, error) {
+	var withdraw *Withdraw
 
-	json.NewDecoder(r).Decode(&w)
+	e := json.NewDecoder(r).Decode(&withdraw)
 
-	return w
+	return withdraw, e
 }
 
-func WithdrawsFromJSON(r io.Reader) []*Withdraw {
+func WithdrawsFromJSON(r io.Reader) ([]*Withdraw, error) {
 	var withdraws []*Withdraw
 
-	json.NewDecoder(r).Decode(&withdraws)
+	e := json.NewDecoder(r).Decode(&withdraws)
 
-	return withdraws
+	return withdraws, e
 }

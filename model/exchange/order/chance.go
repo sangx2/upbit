@@ -21,13 +21,13 @@ type Chance struct {
 		Bid struct {
 			Currency  string `json:"currency"`
 			PriceUnit string `json:"price_unit"`
-			MinTotal  int64  `json:"min_total"`
+			MinTotal  string `json:"min_total"`
 		} `json:"bid"`
 
 		Ask struct {
 			Currency  string `json:"currency"`
 			PriceUnit string `json:"price_unit"`
-			MinTotal  int64  `json:"min_total"`
+			MinTotal  string `json:"min_total"`
 		} `json:"ask"`
 
 		MaxTotal string `json:"max_total"`
@@ -38,10 +38,10 @@ type Chance struct {
 	AskAccount account.Account `json:"ask_account"`
 }
 
-func ChanceFromJSON(r io.Reader) *Chance {
+func ChanceFromJSON(r io.Reader) (*Chance, error) {
 	var c *Chance
 
-	json.NewDecoder(r).Decode(&c)
+	e := json.NewDecoder(r).Decode(&c)
 
-	return c
+	return c, e
 }

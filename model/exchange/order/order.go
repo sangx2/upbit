@@ -33,18 +33,18 @@ type Order struct {
 	} `json:"trades,omitempty"`
 }
 
-func OrderFromJSON(r io.Reader) *Order {
+func OrderFromJSON(r io.Reader) (*Order, error) {
 	var o *Order
 
-	json.NewDecoder(r).Decode(&o)
+	e := json.NewDecoder(r).Decode(&o)
 
-	return o
+	return o, e
 }
 
-func OrdersFromJSON(r io.Reader) []*Order {
+func OrdersFromJSON(r io.Reader) ([]*Order, error) {
 	var orders []*Order
 
-	json.NewDecoder(r).Decode(&orders)
+	e := json.NewDecoder(r).Decode(&orders)
 
-	return orders
+	return orders, e
 }

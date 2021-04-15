@@ -1,25 +1,23 @@
 # 소개
 
-한국인이 대부분 이용할 것 같아서 한글로 남깁니다.
-
 upbit-go 는 [upbit api](https://docs.upbit.com/)를 이용한 라이브러리 패키지 입니다. 
 
 내부적으로 jwt 는 "github.com/dgrijalva/jwt-go", uuid 는 "github.com/google/uuid" 패키지를 사용합니다.
 
-또한 요청 수 제한에 대한 처리는 하지 않고 API 마다 Remaining 구조체를 반환합니다. 개발시 참고하시기 바랍니다.
+또한 요청 수 제한에 대한 처리는 하지 않고 API 마다 Remaining 구조체를 반환합니다. 개발시 참고 바랍니다.
 
 
 ### 설치
 
 ```bash
-go get -u github.com/sangx2/upbit-go
+go get -u github.com/sangx2/upbit
 ```
 
 ## Getting started
 
-### Exchange API
+더 많은 테스트 예문은 _test 이름을 가진 파일들을 참고 바랍니다.
 
-더 많은 테스트 예문은 upbit_test.go 파일의 TestExchange 함수를 참고 하시기 바랍니다.
+### Exchange API
 
 ```go
 package main
@@ -27,7 +25,7 @@ package main
 import (
 	"fmt"
 
-	upbit "github.com/sangx2/upbit-go"
+	"github.com/sangx2/upbit"
 )
 
 func main() {
@@ -35,11 +33,11 @@ func main() {
 
 	accounts, remaining, e := u.GetAccounts()
 	if e != nil {
-		fmt.Println("GetAccounts error : %s", e)
+		fmt.Println("GetAccounts error : %s", e.Error())
 	} else {
-		fmt.Printf("GetAccounts[remaining:%+v]", *remaining)
+		fmt.Printf("GetAccounts[remaining:%+v]\n", *remaining)
 		for _, account := range accounts {
-			fmt.Printf("%+v", *account)
+			fmt.Printf("%+v\n", *account)
 		}
 	}
 }
@@ -49,27 +47,25 @@ func main() {
 
 Quotation API 는 "AccessKey"와 "SecretKey"가 필요하지 않습니다.
 
-더 많은 테스트 예문은 upbit_test.go 파일의 TestQuotation 함수를 참고 하시기 바랍니다.
-
 ```go
 package main
 
 import (
 	"fmt"
 
-	upbit "github.com/sangx2/upbit-go"
+	"github.com/sangx2/upbit"
 )
 
 func main() {
-    u := NewUpbit("", "")
+    u := upbit.NewUpbit("", "")
 
 	markets, remaining, e := u.GetMarkets()
-	if e != nil || len(markets) == 0 {
-		fmt.Println("GetMarkets error : %s", e)
+	if e != nil {
+		fmt.Println("GetMarkets error : %s", e.Error())
 	} else {
-		fmt.Printf("GetMarkets[remaining:%+v]", *remaining)
+		fmt.Printf("GetMarkets[remaining:%+v]\n", *remaining)
 		for _, market := range markets {
-			fmt.Printf("%+v", *market)
+			fmt.Printf("%+v\n", *market)
 		}
 	}
 }

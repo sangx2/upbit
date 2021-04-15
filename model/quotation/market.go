@@ -12,10 +12,10 @@ type Market struct {
 	EnglishName string `json:"english_name"`
 }
 
-func MarketsFromJSON(r io.Reader) []*Market {
+func MarketsFromJSON(r io.Reader) ([]*Market, error) {
 	var markets []*Market
 
-	json.NewDecoder(r).Decode(&markets)
+	e := json.NewDecoder(r).Decode(&markets)
 
-	return markets
+	return markets, e
 }

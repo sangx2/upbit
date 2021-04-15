@@ -19,18 +19,18 @@ type Deposit struct {
 	TransactionType string `json:"transaction_type"`
 }
 
-func DepositFromJSON(r io.Reader) *Deposit {
-	var d *Deposit
+func DepositFromJSON(r io.Reader) (*Deposit, error) {
+	var deposit *Deposit
 
-	json.NewDecoder(r).Decode(d)
+	e := json.NewDecoder(r).Decode(&deposit)
 
-	return d
+	return deposit, e
 }
 
-func DepositsFromJSON(r io.Reader) []*Deposit {
+func DepositsFromJSON(r io.Reader) ([]*Deposit, error) {
 	var deposits []*Deposit
 
-	json.NewDecoder(r).Decode(&deposits)
+	e := json.NewDecoder(r).Decode(&deposits)
 
-	return deposits
+	return deposits, e
 }

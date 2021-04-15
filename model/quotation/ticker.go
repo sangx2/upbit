@@ -34,10 +34,10 @@ type Ticker struct {
 	Timestamp          int64   `json:"timestamp"`
 }
 
-func TickersFromJSON(r io.Reader) []*Ticker {
+func TickersFromJSON(r io.Reader) ([]*Ticker, error) {
 	var tickers []*Ticker
 
-	json.NewDecoder(r).Decode(&tickers)
+	e := json.NewDecoder(r).Decode(&tickers)
 
-	return tickers
+	return tickers, e
 }

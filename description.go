@@ -73,9 +73,9 @@ var DESCRIPTION = map[string]string{
 	"deposit.Deposit.Fee":                  "입금 수수료",
 	"deposit.Deposit.TransactionType":      "입금 유형",
 	// withdraw
-	"withdraw":                                         "출금",
-	"withdraw.Chance":                                  "출금 가능 정보",
-	"withdraw.Chance.MemberLevel":                      "사용자의 보안등급 정보",
+	"withdraw":                    "출금",
+	"withdraw.Chance":             "출금 가능 정보",
+	"withdraw.Chance.MemberLevel": "사용자의 보안등급 정보",
 	"withdraw.Chance.MemberLevel.SecurityLevel":        "사용자의 보안등급",
 	"withdraw.Chance.MemberLevel.FeeLevel":             "사용자의 수수료등급",
 	"withdraw.Chance.MemberLevel.EmailVerified":        "사용자의 이메일 인증 여부",

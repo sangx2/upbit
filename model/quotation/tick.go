@@ -19,10 +19,10 @@ type Tick struct {
 	SequentialID     int64   `json:"sequential_id"`
 }
 
-func TicksFromJSON(r io.Reader) []*Tick {
+func TicksFromJSON(r io.Reader) ([]*Tick, error) {
 	var ticks []*Tick
 
-	json.NewDecoder(r).Decode(&ticks)
+	e := json.NewDecoder(r).Decode(&ticks)
 
-	return ticks
+	return ticks, e
 }

@@ -25,10 +25,10 @@ type Candle struct {
 	FirstDayOfPeriod     string  `json:"first_day_of_period,omitempty"`
 }
 
-func CandlesFromJSON(r io.Reader) []*Candle {
+func CandlesFromJSON(r io.Reader) ([]*Candle, error) {
 	var candles []*Candle
 
-	json.NewDecoder(r).Decode(&candles)
+	e := json.NewDecoder(r).Decode(&candles)
 
-	return candles
+	return candles, e
 }

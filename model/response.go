@@ -27,10 +27,10 @@ type Response1 struct {
 	Message string `json:"message"`
 }
 
-func Response1FromJSON(r io.Reader) *Response1 {
+func Response1FromJSON(r io.Reader) (*Response1, error) {
 	var r1 *Response1
 
-	json.NewDecoder(r).Decode(&r1)
+	e := json.NewDecoder(r).Decode(&r1)
 
-	return r1
+	return r1, e
 }
