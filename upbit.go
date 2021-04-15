@@ -3,7 +3,6 @@ package upbit
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"github.com/sangx2/upbit/model"
 	"hash"
@@ -35,8 +34,6 @@ type Upbit struct {
 	crixTradesClient *http.Client // Group:crix-trades Min:600 Sec:10
 	tickerClient     *http.Client // Group:ticker Min:600 Sec:10
 	orderbookClient  *http.Client // Group:orderbook Min:600 Sec:10
-
-	ResponseError *model.ResponseError // for debug
 }
 
 // NewUpbit :
@@ -76,7 +73,7 @@ func (u *Upbit) createRequest(method, url string, values url.Values, section str
 
 		request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	default:
-		return nil, errors.New("invalid request method")
+		return nil, fmt.Errorf("invalid request method")
 	}
 
 	claim := jwt.MapClaims{
@@ -103,7 +100,7 @@ func (u *Upbit) createRequest(method, url string, values url.Values, section str
 		request.Header.Add("Authorization", "Bearer "+signedToken)
 	case ApiSectionQuotation:
 	default:
-		return nil, errors.New("invalid api section")
+		return nil, fmt.Errorf("invalid api section")
 	}
 
 	return request, nil
@@ -143,11 +140,11 @@ func (u *Upbit) do(request *http.Request, apiGroup string) (*http.Response, erro
 	case 200: // ok
 	case 201: // created
 	default:
-		u.ResponseError = model.ResponseErrorFromJSON(response.Body)
-		if u.ResponseError == nil {
-			return nil, errors.New("model.ResponseErrorFromJSON is nil")
+		respErr := model.ResponseErrorFromJSON(response.Body)
+		if respErr == nil {
+			return nil, fmt.Errorf("ResponseErrorFromJSON is nil")
 		}
-		return nil, fmt.Errorf("[%d:%s]%s:%s", response.StatusCode, response.Status, u.ResponseError.Detail.Name, u.ResponseError.Detail.Message)
+		return nil, fmt.Errorf("[%d:%s] %s:%s", response.StatusCode, response.Status, respErr.Detail.Name, respErr.Detail.Message)
 	}
 
 	return response, nil
