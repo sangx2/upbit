@@ -139,12 +139,14 @@ func (u *Upbit) do(request *http.Request, apiGroup string) (*http.Response, erro
 	switch response.StatusCode {
 	case 200: // ok
 	case 201: // created
+	case 429:
+		return nil, fmt.Errorf("%s", response.Status)
 	default:
 		respErr := model.ResponseErrorFromJSON(response.Body)
 		if respErr == nil {
-			return nil, fmt.Errorf("[%d:%s] ResponseErrorFromJSON is nil", response.StatusCode, response.Status)
+			return nil, fmt.Errorf("[%s] ResponseErrorFromJSON is nil", response.Status)
 		}
-		return nil, fmt.Errorf("[%d:%s] %s:%s", response.StatusCode, response.Status, respErr.Detail.Name, respErr.Detail.Message)
+		return nil, fmt.Errorf("[%s] %s:%s", response.Status, respErr.Detail.Name, respErr.Detail.Message)
 	}
 
 	return response, nil
