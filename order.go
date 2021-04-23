@@ -118,7 +118,7 @@ func (u *Upbit) GetOrder(uuid, identifier string) (*order.Order, *model.Remainin
 // [HEADERS]
 //
 // Authorization : Authorization token(JWT)
-func (u *Upbit) GetOrders(market, state string, uuids, identifiers []string, page, orderBy string) ([]*order.Order, *model.Remaining, error) {
+func (u *Upbit) GetOrders(market, state string, states, uuids, identifiers []string, page, orderBy string) ([]*order.Order, *model.Remaining, error) {
 	switch state {
 	case exchange.ORDER_STATE_WAIT:
 	case exchange.ORDER_STATE_DONE:
@@ -142,6 +142,7 @@ func (u *Upbit) GetOrders(market, state string, uuids, identifiers []string, pag
 	var values = url.Values{
 		"market":      []string{market},
 		"state":       []string{state},
+		"states":      states,
 		"uuids":       uuids,
 		"identifiers": identifiers,
 		"page":        []string{page},
