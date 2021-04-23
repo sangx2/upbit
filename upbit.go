@@ -142,7 +142,7 @@ func (u *Upbit) do(request *http.Request, apiGroup string) (*http.Response, erro
 	default:
 		respErr := model.ResponseErrorFromJSON(response.Body)
 		if respErr == nil {
-			return nil, fmt.Errorf("ResponseErrorFromJSON is nil")
+			return nil, fmt.Errorf("[%d:%s] ResponseErrorFromJSON is nil", response.StatusCode, response.Status)
 		}
 		return nil, fmt.Errorf("[%d:%s] %s:%s", response.StatusCode, response.Status, respErr.Detail.Name, respErr.Detail.Message)
 	}

@@ -14,7 +14,7 @@ import (
 // markets : REQUIRED. 마켓 코드 목록 (ex. KRW-BTC,KRW-ADA)
 func (u *Upbit) GetOrderbooks(markets []string) ([]*quotation.Orderbook, *model.Remaining, error) {
 	if len(markets) == 0 || markets == nil {
-		return nil, nil, fmt.Errorf("invalid marketss")
+		return nil, nil, fmt.Errorf("invalid markets")
 	}
 
 	api, e := GetApiInfo(FuncGetOrderbooks)
