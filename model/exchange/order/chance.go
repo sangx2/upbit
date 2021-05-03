@@ -20,13 +20,13 @@ type Chance struct {
 
 		Bid struct {
 			Currency  string `json:"currency"`
-			PriceUnit int    `json:"price_unit"`
+			PriceUnit int64  `json:"price_unit"`
 			MinTotal  string `json:"min_total"`
 		} `json:"bid"`
 
 		Ask struct {
 			Currency  string `json:"currency"`
-			PriceUnit int    `json:"price_unit"`
+			PriceUnit int64  `json:"price_unit"`
 			MinTotal  string `json:"min_total"`
 		} `json:"ask"`
 
