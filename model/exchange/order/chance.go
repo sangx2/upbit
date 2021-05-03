@@ -41,7 +41,10 @@ type Chance struct {
 func ChanceFromJSON(r io.Reader) (*Chance, error) {
 	var c *Chance
 
-	e := json.NewDecoder(r).Decode(&c)
+	decoder := json.NewDecoder(r)
+	decoder.UseNumber()
+
+	e := decoder.Decode(&c)
 
 	return c, e
 }
