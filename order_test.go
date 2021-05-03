@@ -18,7 +18,7 @@ func TestOrder(t *testing.T) {
 			t.Logf("GetOrderChance[remaining:%+v]\n%+v", *remaining, *chance)
 		}
 
-		orders, remaining, e := u.GetOrders(marketID, exchange.ORDER_STATE_WAIT, nil, nil, "1", exchange.ORDERBY_ASC)
+		orders, remaining, e := u.GetOrders(marketID, exchange.ORDER_STATE_WAIT, nil, nil, nil, "1", exchange.ORDERBY_ASC)
 		if e != nil {
 			t.Logf("GetOrders error : %s", e.Error())
 		} else {
@@ -29,7 +29,7 @@ func TestOrder(t *testing.T) {
 			}
 		}
 
-		orders, remaining, e = u.GetOrders(marketID, exchange.ORDER_STATE_DONE, nil, nil, "1", exchange.ORDERBY_ASC)
+		orders, remaining, e = u.GetOrders(marketID, exchange.ORDER_STATE_DONE, nil, nil, nil, "1", exchange.ORDERBY_ASC)
 		if e != nil {
 			t.Logf("GetOrders error : %s", e.Error())
 		} else {
@@ -40,7 +40,7 @@ func TestOrder(t *testing.T) {
 			}
 		}
 
-		orders, remaining, e = u.GetOrders(marketID, exchange.ORDER_STATE_CANCEL, nil, nil, "1", exchange.ORDERBY_ASC)
+		orders, remaining, e = u.GetOrders(marketID, exchange.ORDER_STATE_CANCEL, nil, nil, nil, "1", exchange.ORDERBY_ASC)
 		if e != nil {
 			t.Logf("GetOrders error : %s", e.Error())
 		} else {
