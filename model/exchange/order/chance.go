@@ -19,15 +19,15 @@ type Chance struct {
 		OrderSides []string `json:"order_sides"`
 
 		Bid struct {
-			Currency  string `json:"currency"`
-			PriceUnit int64  `json:"price_unit"`
-			MinTotal  string `json:"min_total"`
+			Currency  string      `json:"currency"`
+			PriceUnit interface{} `json:"price_unit"`
+			MinTotal  string      `json:"min_total"`
 		} `json:"bid"`
 
 		Ask struct {
-			Currency  string `json:"currency"`
-			PriceUnit int64  `json:"price_unit"`
-			MinTotal  string `json:"min_total"`
+			Currency  string      `json:"currency"`
+			PriceUnit interface{} `json:"price_unit"`
+			MinTotal  string      `json:"min_total"`
 		} `json:"ask"`
 
 		MaxTotal string `json:"max_total"`
