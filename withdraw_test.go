@@ -102,7 +102,7 @@ func TestWithdraw(t *testing.T) {
 		}
 
 		if len(uuids) != 0 {
-			withdraw, remaining, e := u.GetWithdraw(uuids[0])
+			withdraw, remaining, e := u.GetWithdraw(uuids[0], "", "")
 			if e != nil {
 				t.Errorf("GetWithdraw error : %s", e.Error())
 			} else {

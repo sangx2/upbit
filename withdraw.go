@@ -17,7 +17,15 @@ import (
 //
 // state : 출금 상태
 //
+// uuids : 출금 UUID의 목록
+//
+// txids : 출금 TXID의 목록
+//
 // limit : 갯수 제한. default: 100, max: 100
+//
+// page  : 페이지 수, default: 1
+//
+// orderBy : 정렬
 //
 // [HEADERS]
 //
@@ -89,14 +97,18 @@ func (u *Upbit) GetWithdraws(currency, state string, uuids, txids []string, limi
 //
 // [QUERY PARAMS]
 //
-// uuid : REQUIRED. 출금 UUID
+// uuid : 출금 UUID
+//
+// txid : 출금 TXID
+//
+// currency : Currency 코드
 //
 // [HEADERS]
 //
 // Authorization : REQUIRED. Authorization token(JWT)
-func (u *Upbit) GetWithdraw(uuid string) (*withdraw.Withdraw, *model.Remaining, error) {
-	if len(uuid) == 0 {
-		return nil, nil, fmt.Errorf("uuid length is 0")
+func (u *Upbit) GetWithdraw(uuid, txid, currency string) (*withdraw.Withdraw, *model.Remaining, error) {
+	if (len(uuid) + len(txid) + len(currency)) == 0 {
+		return nil, nil, fmt.Errorf("invalid args")
 	}
 
 	api, e := GetApiInfo(FuncGetWithdraw)
@@ -105,7 +117,9 @@ func (u *Upbit) GetWithdraw(uuid string) (*withdraw.Withdraw, *model.Remaining, 
 	}
 
 	var values = url.Values{
-		"uuid": []string{uuid},
+		"uuid":     []string{uuid},
+		"txid":     []string{txid},
+		"currency": []string{currency},
 	}
 
 	req, e := u.createRequest(api.Method, BaseURI+api.Url, values, api.Section)
