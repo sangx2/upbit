@@ -17,6 +17,12 @@ import (
 //
 // currency : Currency 코드
 //
+// state : 입금 상태
+//
+// uuids : 입금 UUID의 목록
+//
+// txids : 입금 TXID의 목록
+//
 // limit : 페이지당 개수
 //
 // page ; 페이지 번호
@@ -60,6 +66,9 @@ func (u *Upbit) GetDeposits(currency, state string, uuids, txids []string, limit
 
 	var values = url.Values{
 		"currency": []string{currency},
+		"state":    []string{state},
+		"uuids":    uuids,
+		"txids":    txids,
 		"limit":    []string{limit},
 		"page":     []string{page},
 		"order_by": []string{orderBy},
