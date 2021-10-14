@@ -26,7 +26,7 @@ func TestDeposit(t *testing.T) {
 		}
 
 		if len(uuids) != 0 {
-			deposit, remaining, e := u.GetDeposit(uuids[0])
+			deposit, remaining, e := u.GetDeposit(uuids[0], "", "")
 			if e != nil {
 				t.Logf("GetDeposit error : %s", e.Error())
 			} else {

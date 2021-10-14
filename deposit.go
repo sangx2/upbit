@@ -88,14 +88,18 @@ func (u *Upbit) GetDeposits(currency, state string, uuids, txids []string, limit
 //
 // [QUERY PARAMS]
 //
-// uuid : REQUIRED. 개별 입금의 UUID
+// uuid : 입금 UUID
+//
+// txid : 입금 TXID
+//
+// currency : Currency 코드
 //
 // [HEADERS]
 //
 // Authorization : REQUIRED. Authorization token(JWT)
-func (u *Upbit) GetDeposit(uuid string) (*deposit.Deposit, *model.Remaining, error) {
-	if len(uuid) == 0 {
-		return nil, nil, fmt.Errorf("uuid length is 0")
+func (u *Upbit) GetDeposit(uuid, txid, currency string) (*deposit.Deposit, *model.Remaining, error) {
+	if (len(uuid) + len(txid) + len(currency)) == 0 {
+		return nil, nil, fmt.Errorf("invalid args")
 	}
 
 	api, e := GetApiInfo(FuncGetDeposit)
@@ -104,7 +108,9 @@ func (u *Upbit) GetDeposit(uuid string) (*deposit.Deposit, *model.Remaining, err
 	}
 
 	var values = url.Values{
-		"uuid": []string{uuid},
+		"uuid":     []string{uuid},
+		"txid":     []string{txid},
+		"currency": []string{currency},
 	}
 
 	req, e := u.createRequest(api.Method, BaseURI+api.Url, values, api.Section)
