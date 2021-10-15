@@ -320,8 +320,8 @@ func (u *Upbit) SellOrder(market, volume, price, orderType, identifier string) (
 // uuid : REQUIRED. 주문 UUID
 //
 func (u *Upbit) CancelOrder(uuid, identifier string) (*order.Order, *model.Remaining, error) {
-	if len(uuid) == 0 {
-		return nil, nil, fmt.Errorf("uuid length is 0")
+	if (len(uuid) + len(identifier)) == 0 {
+		return nil, nil, fmt.Errorf("invalid args")
 	}
 
 	api, e := GetApiInfo(FuncCancelOrder)
