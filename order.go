@@ -113,12 +113,14 @@ func (u *Upbit) GetOrder(uuid, identifier string) (*order.Order, *model.Remainin
 //
 // page : 페이지 수, default: 1
 //
+// limit : 요청 개수 (1 ~ 100)
+//
 // orderBy : 정렬 방식
 //
 // [HEADERS]
 //
 // Authorization : Authorization token(JWT)
-func (u *Upbit) GetOrders(market, state string, states, uuids, identifiers []string, page, orderBy string) ([]*order.Order, *model.Remaining, error) {
+func (u *Upbit) GetOrders(market, state string, states, uuids, identifiers []string, page, limit, orderBy string) ([]*order.Order, *model.Remaining, error) {
 	switch state {
 	case exchange.ORDER_STATE_WAIT:
 	case exchange.ORDER_STATE_DONE:
@@ -146,6 +148,7 @@ func (u *Upbit) GetOrders(market, state string, states, uuids, identifiers []str
 		"uuids":       uuids,
 		"identifiers": identifiers,
 		"page":        []string{page},
+		"limit":       []string{limit},
 		"order_by":    []string{orderBy},
 	}
 
