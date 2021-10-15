@@ -319,7 +319,7 @@ func (u *Upbit) SellOrder(market, volume, price, orderType, identifier string) (
 //
 // uuid : REQUIRED. 주문 UUID
 //
-func (u *Upbit) CancelOrder(uuid string) (*order.Order, *model.Remaining, error) {
+func (u *Upbit) CancelOrder(uuid, identifier string) (*order.Order, *model.Remaining, error) {
 	if len(uuid) == 0 {
 		return nil, nil, fmt.Errorf("uuid length is 0")
 	}
@@ -330,7 +330,8 @@ func (u *Upbit) CancelOrder(uuid string) (*order.Order, *model.Remaining, error)
 	}
 
 	var values = url.Values{
-		"uuid": []string{uuid},
+		"uuid":       []string{uuid},
+		"identifier": []string{identifier},
 	}
 
 	req, e := u.createRequest(api.Method, BaseURI+api.Url, values, api.Section)

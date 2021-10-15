@@ -69,7 +69,7 @@ func TestOrder(t *testing.T) {
 			}
 		*/
 		/*
-			cancelOrder, remaining, e := u.CancelOrder("b2f1b30d-7bd3-4fdb-b354-b03ed3c8c57b")
+			cancelOrder, remaining, e := u.CancelOrder("b2f1b30d-7bd3-4fdb-b354-b03ed3c8c57b", "")
 			if e != nil {
 				t.Errorf("CancelOrder error : %s", e.Error())
 			} else {
